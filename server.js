@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./middleware/auth");
@@ -13,18 +12,15 @@ require("dotenv").config();
 const app = express();
 const PORT = 5000;
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:3000', 'http://localhost:5173', 'https://esign.autoshopmm.com'];
-
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
-
-app.options('*', cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
