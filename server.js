@@ -28,7 +28,7 @@ const JWT_SECRET =
   process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
 // Connect to database
-connectDB();
+connectDB().catch(console.error);
 
 // Initialize default admin user
 const initializeAdmin = async () => {
